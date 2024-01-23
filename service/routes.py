@@ -62,6 +62,17 @@ def create_accounts():
 ######################################################################
 
 # ... place you code here to LIST accounts ...
+@app.route("/accounts", methods=["GET"])
+def list_accounts():
+    """lists accounts
+    will list all accounts in the database"""
+    message = []
+    app.logger.info("Getting a list of accounts")
+    check_content_type("application/json")
+    accounts = Account.all()
+    return make_response(
+        accounts
+    )
 
 
 ######################################################################
