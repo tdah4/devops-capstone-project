@@ -140,5 +140,30 @@ class TestAccountService(TestCase):
         self.assertEqual(len(accounts), 4) 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIs(accounts, [])
+
+    def test_read_account(self):
+        """should read account"""
+        account = AccountFactory()
+        account.create()
+        account_id = account.id
+        response = self.client.get(
+            BASE_URL,
+            json=account_id,
+            content_type = "application/json"
+        )
+        #self.assertEqual(response.status_code, status.HTTP_200_OK)
+        #self.assertEqual(response.json, account.serialize())
+        self.assertIsNotNone(response)
+
+    def test_read_nonexistent_account(self):
+        """read a nonexistent account and tell you it cannot be found"""
+        account_id = ""
+        response = self.client.get(
+            BASE_URL,
+            json=account_id,
+            content_type = "application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
         
 
