@@ -124,3 +124,109 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
     # ADD YOUR TEST CASES HERE ...
+    def test_list_accounts(self):
+        """It should list all accounts"""
+        accounts = Account.all()
+        self.assertEqual(accounts, [])
+        for account in AccountFactory.create_batch(4):
+            account.create()
+        # make sure there are 4 accounts
+        laccounts = []
+        accounts = Account.all()
+        for a in accounts:
+            a = a.serialize()
+            laccounts.append(account)
+
+        response = self.client.get(
+            BASE_URL,
+            json=account.serialize(),
+            content_type="application/json"
+        )
+        self.assertEqual(len(accounts), 4) 
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+
+    def test_read_account(self):
+        """should read account"""
+        account = AccountFactory()
+        account.create()
+        id = account.id
+        NEW_URL= BASE_URL + "/%s" % id
+        account = Account.find(id)
+        response = self.client.get(
+            NEW_URL,
+            json=id,
+            content_type = "application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json, account.serialize())
+        self.assertIsNotNone(response)
+
+    def test_read_nonexistent_account(self):
+        """read a nonexistent account and tell you it cannot be found"""
+        account = AccountFactory()
+        account.create()
+        id = 8
+        NEW_URL= BASE_URL + "/%s" % id
+        response = self.client.get(
+            NEW_URL,
+            json=id,
+            content_type = "application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        
+    def test_update_account(self):
+        """update account"""
+        account = AccountFactory()
+        account.create()
+        id = account.id
+        new_account = AccountFactory()
+
+        NEW_URL= BASE_URL + "/%s" % id
+        response = self.client.put(
+            NEW_URL,
+            json=new_account.serialize(),
+            content_type = "application/json"
+        )
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_find_account_error(self):
+        """If not found return error 404"""
+        account = AccountFactory()
+        account.create()
+        new_account = AccountFactory()
+        id = 8
+        NEW_URL= BASE_URL + "/%s" % id
+        response = self.client.put(
+            NEW_URL,
+            json=new_account.serialize(),
+            content_type = "application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_account(self):
+        """delete account"""
+        account = AccountFactory()
+        account.create()
+        id = account.id
+        NEW_URL= BASE_URL + "/%s" % id
+        response = self.client.delete(
+            NEW_URL,
+            json=id,
+            content_type = "application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        
+    def test_delete_nonexistent_account(self):
+        """delete nonexistent account"""
+        account = AccountFactory()
+        account.create()
+        id = 8
+        NEW_URL= BASE_URL + "/%s" % id
+        response = self.client.delete(
+            NEW_URL,
+            json=id,
+            content_type = "application/json"
+        )
+        
