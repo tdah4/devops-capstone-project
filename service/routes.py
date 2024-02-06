@@ -79,21 +79,21 @@ def list_accounts():
 ######################################################################
 
 # ... place you code here to READ an account ...
-@app.route("/accounts/<id>", methods=["GET"])
-def read_account(id):
+#@app.route("/accounts/<id>", methods=["GET"])
+@app.route("/accounts/<int:account_id>", methods=["GET"])
+def read_account(account_id):
     """read an account from an id"""
     #logging information
     app.logger.info("Looking for account")
-    check_content_type("application/json")
     #finding the account and returning it
-    account = Account.find(id)
+    account = Account.find(account_id)
     #if invalid id returns 404
     if account == None:
         return make_response("", status.HTTP_404_NOT_FOUND)
     message = account.serialize()
-    return make_response(message, status.HTTP_200_OK)
+    return message, status.HTTP_200_OK
         
-   
+
         
 
 
@@ -124,25 +124,20 @@ def update_account(id):
 ######################################################################
 
 # ... place you code here to DELETE an account ...
-@app.route("/accounts/<id>", methods=["DELETE"])
-def delete_account(id):
+@app.route("/accounts/<int:account_id>", methods=["DELETE"])
+def delete_account(account_id):
     """delete an account from an id"""
     #logging information
     app.logger.info("Looking for account")
-    check_content_type("application/json")
     #finding the account 
-    account = Account.find(id)
+    account = Account.find(account_id)
     #if invalid id returns nothing
     #deletes the account
-    try:
+    if account:
         account.delete()
-    except: pass
-    no_account = Account.find(id)
-    if no_account == None:
-        app.logger.info("did not find account %s" % id)
-        return make_response('', status.HTTP_204_NO_CONTENT)
-        
-    
+    return '', status.HTTP_204_NO_CONTENT
+
+
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S

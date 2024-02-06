@@ -154,9 +154,7 @@ class TestAccountService(TestCase):
         NEW_URL= BASE_URL + "/%s" % id
         account = Account.find(id)
         response = self.client.get(
-            NEW_URL,
-            json=id,
-            content_type = "application/json"
+            f"{BASE_URL}/{account.id}", content_type="application/json"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json, account.serialize())
@@ -170,10 +168,11 @@ class TestAccountService(TestCase):
         NEW_URL= BASE_URL + "/%s" % id
         response = self.client.get(
             NEW_URL,
-            json=id,
             content_type = "application/json"
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    
         
     def test_update_account(self):
         """update account"""
@@ -209,13 +208,8 @@ class TestAccountService(TestCase):
         """delete account"""
         account = AccountFactory()
         account.create()
-        id = account.id
-        NEW_URL= BASE_URL + "/%s" % id
-        response = self.client.delete(
-            NEW_URL,
-            json=id,
-            content_type = "application/json"
-        )
+        response = self.client.delete(f"{BASE_URL}/{account.id}")
+
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         
     def test_delete_nonexistent_account(self):
@@ -226,7 +220,7 @@ class TestAccountService(TestCase):
         NEW_URL= BASE_URL + "/%s" % id
         response = self.client.delete(
             NEW_URL,
-            json=id,
             content_type = "application/json"
         )
-        
+
+    
