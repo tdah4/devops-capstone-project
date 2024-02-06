@@ -142,16 +142,14 @@ class TestAccountService(TestCase):
             json=account.serialize(),
             content_type="application/json"
         )
-        self.assertEqual(len(accounts), 4) 
+        self.assertEqual(len(accounts), 4)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        
 
     def test_read_account(self):
         """should read account"""
         account = AccountFactory()
         account.create()
         id = account.id
-        NEW_URL= BASE_URL + "/%s" % id
         account = Account.find(id)
         response = self.client.get(
             f"{BASE_URL}/{account.id}", content_type="application/json"
@@ -165,15 +163,13 @@ class TestAccountService(TestCase):
         account = AccountFactory()
         account.create()
         id = 8
-        NEW_URL= BASE_URL + "/%s" % id
+        NEW_URL = BASE_URL + "/%s" % id
         response = self.client.get(
             NEW_URL,
-            content_type = "application/json"
+            content_type="application/json"
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    
-        
     def test_update_account(self):
         """update account"""
         account = AccountFactory()
@@ -181,13 +177,12 @@ class TestAccountService(TestCase):
         id = account.id
         new_account = AccountFactory()
 
-        NEW_URL= BASE_URL + "/%s" % id
+        NEW_URL = BASE_URL + "/%s" % id
         response = self.client.put(
             NEW_URL,
             json=new_account.serialize(),
-            content_type = "application/json"
+            content_type="application/json"
         )
-        
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_find_account_error(self):
@@ -196,11 +191,11 @@ class TestAccountService(TestCase):
         account.create()
         new_account = AccountFactory()
         id = 8
-        NEW_URL= BASE_URL + "/%s" % id
+        NEW_URL = BASE_URL + "/%s" % id
         response = self.client.put(
             NEW_URL,
             json=new_account.serialize(),
-            content_type = "application/json"
+            content_type="application/json"
         )
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -211,16 +206,14 @@ class TestAccountService(TestCase):
         response = self.client.delete(f"{BASE_URL}/{account.id}")
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        
+
     def test_delete_nonexistent_account(self):
         """delete nonexistent account"""
         account = AccountFactory()
         account.create()
         id = 8
-        NEW_URL= BASE_URL + "/%s" % id
+        NEW_URL = BASE_URL + "/%s" % id
         response = self.client.delete(
             NEW_URL,
-            content_type = "application/json"
+            content_type="application/json"
         )
-
-    
