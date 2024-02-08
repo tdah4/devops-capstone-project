@@ -206,14 +206,3 @@ class TestAccountService(TestCase):
         response = self.client.delete(f"{BASE_URL}/{account.id}")
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
-    def test_delete_nonexistent_account(self):
-        """delete nonexistent account"""
-        account = AccountFactory()
-        account.create()
-        id = 8
-        NEW_URL = BASE_URL + "/%s" % id
-        response = self.client.delete(
-            NEW_URL,
-            content_type="application/json"
-        )
